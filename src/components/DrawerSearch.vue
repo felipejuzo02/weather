@@ -52,6 +52,7 @@ export default {
       color: white;
       position: absolute;
       right: 32px;
+      cursor: pointer;
     }
 
     &__form {
@@ -72,6 +73,7 @@ export default {
       background-color: #3C47E9;
       color: $white;
       border: none;
+      cursor: pointer;
     }
   }
 

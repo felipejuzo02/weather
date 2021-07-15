@@ -81,6 +81,7 @@ export default {
       background-color: $grey2;
       color: $white;
       border: none;
+      cursor: pointer;
     }
 
     &__image-background {

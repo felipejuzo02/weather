@@ -3,17 +3,22 @@ import axios from 'axios'
 axios.defaults.baseURL = 'https://cors-anywhere.herokuapp.com/https://www.metaweather.com/api/'
 
 const state = {
-  city: {}
+  city: {},
+  consolidatedWeather: [],
+  todayInformation: {}
 }
 
 const getters = {
   cityInformation: state => state.city,
-  weekInformations: state => state.city.consolidated_weather
+  weekInformations: state => state.consolidatedWeather,
+  todayInformation: state => state.todayInformation
 }
 
 const mutations = {
   setCity (state, data) {
     state.city = data
+    state.consolidatedWeather = data.consolidated_weather
+    state.todayInformation = data.consolidated_weather[0]
   }
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="flex-row page-main">
     <drawer-search @closeSearch="changeIsSearch" v-if="isSearch" />
-    <drawer-details @searchPlaces="changeIsSearch" v-else :content="drawerInformations" />
+    <drawer-details @searchPlaces="changeIsSearch" v-else :content="drawerInfos" />
 
     <div class="page-main__container">
       <div class="page-main__content">
@@ -15,31 +15,35 @@
         </div>
 
         <div class="page-main__infos-today">
-          <p class="page-main__text">Today's Hightlights</p>
+          <p class="page-main__text mt-lg">Today's Hightlights</p>
           <div class="flex-row mt-lg page-main__cards-today">
-            <an-card-today-information :content="{ title: 'Wind status', bodyNumber: '7', bodyText: 'mph', footerIcon: 'c', footerText: 'WSW' }">
+            <an-card-today-information :content="windStatus">
               <template v-slot:footer>
-                <div class="mt-lg">
-                  <div class="page-main__cards-footer flex-row">
+                <div class="page-main__cards-footer">
+                  <div class="page-main__container-footer flex-row">
                     <span class="mr-sm"><svg class="page-main__near-me" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M21 3L3 10.5v1l6.8 2.7 2.7 6.8h1L21 3z"/></svg></span>
-                    <p>WSW</p>
+                    <p>{{ this.todayInformation.wind_direction_compass }}</p>
                   </div>
                 </div>
               </template>
             </an-card-today-information>
 
-            <an-card-today-information :content="{ title: 'Humidty', bodyNumber: '84', bodyText: '%', footerIcon: 'c', footerText: 'WSW' }">
+            <an-card-today-information :content="humidty">
               <template v-slot:footer>
-                <div class="page-main__cards-footer flex-row">
-                 <p>progress bar</p>
+                <div class="page-main__cards-footer">
+                  <div class="page-main__container-footer flex-row">
+                    <div class="page-main__progress-bar">
+                      <div class="page-main__progress-bar-status" :style="`--prog: ${this.todayInformation.humidity}%`" />
+                    </div>
+                  </div>
                 </div>
               </template>
             </an-card-today-information>
           </div>
 
           <div class="flex-row mt-lg page-main__cards-today">
-            <an-card-today-information :content="{ title: 'Visibility', bodyNumber: '6,4', bodyText: 'miles' }" />
-            <an-card-today-information :content="{ title: 'Air Pressure', bodyNumber: '998', bodyText: 'mb' }" />
+            <an-card-today-information :content="visibility" />
+            <an-card-today-information :content="airPressure" />
           </div>
 
         </div>
@@ -70,10 +74,9 @@ export default {
   data () {
     return {
       values: {
-        id: 44418
+        id: 2487956
       },
 
-      drawerInformations: {},
       weekInformationsData: [],
 
       isSearch: false
@@ -83,29 +86,62 @@ export default {
   computed: {
     ...mapGetters({
       cityInformation: 'weather/cityInformation',
-      weekInformations: 'weather/weekInformations'
-    })
+      weekInformations: 'weather/weekInformations',
+      todayInformation: 'weather/todayInformation'
+    }),
+
+    drawerInfos () {
+      return {
+        temperature: formatTemperature(this.todayInformation.the_temp),
+        day: 'Fri, 5 Jun',
+        city: this.cityInformation.title,
+        link: `https://www.metaweather.com/static/img/weather/${this.todayInformation.weather_state_abbr}.svg`
+      }
+    },
+
+    windStatus () {
+      return {
+        title: 'Wind status',
+        bodyNumber: formatTemperature(this.todayInformation.wind_speed),
+        bodyText: 'mph'
+      }
+    },
+
+    humidty () {
+      return {
+        title: 'Humidty',
+        bodyNumber: this.todayInformation.humidity,
+        bodyText: '%'
+      }
+    },
+
+    visibility () {
+      return {
+        title: 'Visibility',
+        bodyNumber: this.todayInformation.visibility.toFixed(1),
+        bodyText: 'miles'
+      }
+    },
+
+    airPressure () {
+      return {
+        title: 'Air Pressure',
+        bodyNumber: formatTemperature(this.todayInformation.air_pressure),
+        bodyText: 'mb'
+      }
+    }
   },
 
   methods: {
     ...mapActions({
-      weather: 'weather/fetchCity'
+      fetchCity: 'weather/fetchCity'
     }),
 
+    formatTemperature,
+
     changeIsSearch () {
+      console.log(this.todayInformation)
       this.isSearch = !this.isSearch
-    },
-
-    async setDrawerValues () {
-      const todayInformation = await this.cityInformation.consolidated_weather[0]
-      const drawerValues = {
-        temperature: formatTemperature(todayInformation.the_temp),
-        day: 'Fri, 5 Jun',
-        city: this.cityInformation.title,
-        link: `https://www.metaweather.com/static/img/weather/${todayInformation.weather_state_abbr}.svg`
-      }
-
-      this.drawerInformations = drawerValues
     },
 
     formatValues () {
@@ -122,15 +158,13 @@ export default {
     },
 
     async setValues () {
-      await this.weather(this.values.id)
-      await this.setDrawerValues()
-      await this.weekInformations
+      await this.fetchCity(this.values.id)
       this.removeFirstElement()
     }
 
   },
 
-  async created () {
+  created () {
     this.setValues()
   }
 }
@@ -159,7 +193,7 @@ export default {
       justify-content: space-between;
     }
 
-    &__infos-today {
+    &__infos-todayInformation {
       margin-top: 64px;
     }
 
@@ -172,12 +206,32 @@ export default {
       justify-content: space-between;
     }
 
+    &__progress-bar {
+      position: relative;
+      width: 80%;
+      height: 8px;
+      background-color: $grey2;
+      border-radius: 5px;
+    }
+
+    &__progress-bar-status {
+      position: relative;
+      width: var(--prog);
+      height: 8px;
+      background-color: #FFEC65;
+      border-radius: 5px;
+      z-index: 2;
+    }
+
     &__cards-footer {
+      position: relative;
+      width: 100%;
+    }
+
+    &__container-footer {
+      justify-content: center;
+      margin: 0 auto;
       align-items: center;
-      position: absolute;
-      bottom: 12px;
-      left: 50%;
-      transform: translateX(-50%);
     }
 
     &__near-me {
