@@ -17,7 +17,7 @@
         </div>
 
         <div class="flex-row mt-lg page-main__cards-week">
-          <an-card-temperature-week v-for="(city, index) in weekInformationsData" :key="index" :content="{ day: 'Today', maxTemperature: city.max_temp, minTemperature: city.min_temp, stateAbbr: city.weather_state_abbr}" />
+          <an-card-temperature-week v-for="(city, index) in weekInformationsData" :key="index" :content="{ day: city.applicable_date, maxTemperature: city.max_temp, minTemperature: city.min_temp, stateAbbr: city.weather_state_abbr}" />
         </div>
 
         <div class="page-main__infos-today">
@@ -67,6 +67,7 @@ import DrawerSearch from '../components/DrawerSearch.vue'
 import DrawerDetails from '../components/DrawerDetails.vue'
 import { mapGetters, mapActions } from 'vuex'
 import formatTemperature from '../helpers/methods/formatTemperature'
+import formatDate from '../helpers/methods/formatDate'
 import SearchItem from '../components/SearchItem.vue'
 
 export default {
@@ -185,6 +186,8 @@ export default {
 
     formatTemperature,
 
+    formatDate,
+
     changeIsSearch () {
       this.isSearch = !this.isSearch
     },
@@ -202,17 +205,24 @@ export default {
       this.changeIsSearch()
     },
 
-    formatValues () {
+    formatTemparatureValues () {
       for (const key in this.weekInformationsData) {
         this.weekInformationsData[key].max_temp = `${formatTemperature(this.weekInformationsData[key].max_temp)}ºC`
         this.weekInformationsData[key].min_temp = `${formatTemperature(this.weekInformationsData[key].min_temp)}ºC`
       }
     },
 
+    formatDateValues () {
+      for (const key in this.weekInformationsData) {
+        this.weekInformationsData[key].applicable_date = `${formatDate(this.weekInformationsData[key].applicable_date, 'en-US')}`
+      }
+    },
+
     async removeFirstElement () {
       this.weekInformationsData = await this.weekInformations
       this.weekInformationsData.shift()
-      this.formatValues()
+      this.formatTemparatureValues()
+      this.formatDateValues()
     },
 
     async setValues () {
