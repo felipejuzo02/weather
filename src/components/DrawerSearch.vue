@@ -5,10 +5,12 @@
         <button class="drawer-search__button-done px-md" @click="closeSearch">X</button>
 
         <form class="flex-row pt-lg drawer-search__form">
-          <input type="text" class="drawer-search__search px-md">
-          <button class="drawer-search__button-search px-md">Search</button>
+          <input v-model="search" type="text" class="drawer-search__search px-md" placeholder="Search for a city...">
+          <button class="drawer-search__button-search px-md" @click="searchCities(search)">Search</button>
         </form>
       </div>
+
+      <slot name="search" :search="search" />
     </template>
   </drawer-structure>
 
@@ -29,9 +31,19 @@ export default {
     }
   },
 
+  data () {
+    return {
+      search: ''
+    }
+  },
+
   methods: {
     closeSearch () {
       this.$emit('closeSearch')
+    },
+
+    searchCities (search) {
+      this.$emit('search', search)
     }
   }
 }

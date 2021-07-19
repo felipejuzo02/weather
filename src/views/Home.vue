@@ -1,6 +1,12 @@
 <template>
   <div class="flex-row page-main">
-    <drawer-search @closeSearch="changeIsSearch" v-if="isSearch" />
+    <drawer-search @closeSearch="changeIsSearch" v-if="isSearch" @search="searchCities">
+      <template v-slot:search>
+        <div class="page-main__search-list mx-lg">
+          <search-item v-for="(city, index) in cities" :key="index" :cityName="city.title" @citySelect="citySelect(city)" />
+        </div>
+      </template>
+    </drawer-search>
     <drawer-details @searchPlaces="changeIsSearch" v-else :content="drawerInfos" />
 
     <div class="page-main__container">
@@ -21,7 +27,7 @@
               <template v-slot:footer>
                 <div class="page-main__cards-footer">
                   <div class="page-main__container-footer flex-row">
-                    <span class="mr-sm"><svg class="page-main__near-me" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M21 3L3 10.5v1l6.8 2.7 2.7 6.8h1L21 3z"/></svg></span>
+                    <span class="mr-sm"><svg class="page-main__near-me" :style="`--prog: ${degress}deg`" xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M21 3L3 10.5v1l6.8 2.7 2.7 6.8h1L21 3z"/></svg></span>
                     <p>{{ this.todayInformation.wind_direction_compass }}</p>
                   </div>
                 </div>
@@ -61,6 +67,7 @@ import DrawerSearch from '../components/DrawerSearch.vue'
 import DrawerDetails from '../components/DrawerDetails.vue'
 import { mapGetters, mapActions } from 'vuex'
 import formatTemperature from '../helpers/methods/formatTemperature'
+import SearchItem from '../components/SearchItem.vue'
 
 export default {
   components: {
@@ -68,7 +75,8 @@ export default {
     AnCardTemperatureWeek,
     AnCardTodayInformation,
     DrawerSearch,
-    DrawerDetails
+    DrawerDetails,
+    SearchItem
   },
 
   data () {
@@ -78,8 +86,8 @@ export default {
       },
 
       weekInformationsData: [],
-
-      isSearch: false
+      isSearch: false,
+      valueSearch: ''
     }
   },
 
@@ -87,7 +95,8 @@ export default {
     ...mapGetters({
       cityInformation: 'weather/cityInformation',
       weekInformations: 'weather/weekInformations',
-      todayInformation: 'weather/todayInformation'
+      todayInformation: 'weather/todayInformation',
+      cities: 'weather/fetchCities'
     }),
 
     drawerInfos () {
@@ -129,19 +138,68 @@ export default {
         bodyNumber: formatTemperature(this.todayInformation.air_pressure),
         bodyText: 'mb'
       }
+    },
+
+    degress () {
+      if (this.todayInformation.wind_direction_compass === 'N') {
+        return -43.5
+      } else if (this.todayInformation.wind_direction_compass === 'NNE') {
+        return -21
+      } else if (this.todayInformation.wind_direction_compass === 'NE') {
+        return 1.5
+      } else if (this.todayInformation.wind_direction_compass === 'ENE') {
+        return 24
+      } else if (this.todayInformation.wind_direction_compass === 'E') {
+        return 48.5
+      } else if (this.todayInformation.wind_direction_compass === 'ESE') {
+        return 71
+      } else if (this.todayInformation.wind_direction_compass === 'SE') {
+        return 93.5
+      } else if (this.todayInformation.wind_direction_compass === 'SSE') {
+        return 116
+      } else if (this.todayInformation.wind_direction_compass === 'S') {
+        return 138.5
+      } else if (this.todayInformation.wind_direction_compass === 'SSW') {
+        return 161
+      } else if (this.todayInformation.wind_direction_compass === 'SW') {
+        return 183.5
+      } else if (this.todayInformation.wind_direction_compass === 'WSW') {
+        return 206
+      } else if (this.todayInformation.wind_direction_compass === 'W') {
+        return 228.5
+      } else if (this.todayInformation.wind_direction_compass === 'WNW') {
+        return 251
+      } else if (this.todayInformation.wind_direction_compass === 'NW') {
+        return 273.5
+      } else {
+        return 296
+      }
     }
   },
 
   methods: {
     ...mapActions({
-      fetchCity: 'weather/fetchCity'
+      fetchCity: 'weather/fetchCity',
+      fetchCities: 'weather/fetchCities'
     }),
 
     formatTemperature,
 
     changeIsSearch () {
-      console.log(this.todayInformation)
       this.isSearch = !this.isSearch
+    },
+
+    async searchCities (value) {
+      event.preventDefault()
+      if (value) {
+        await this.fetchCities(value)
+      }
+    },
+
+    async citySelect (city) {
+      this.values.id = city.woeid
+      await await this.fetchCity(this.values.id)
+      this.changeIsSearch()
     },
 
     formatValues () {
@@ -183,6 +241,10 @@ export default {
 
     &__content {
       width: 860px;
+    }
+
+    &__search-list {
+      padding-top: 18px;
     }
 
     &__temperature-buttons {
@@ -239,6 +301,7 @@ export default {
       background-color: $grey2;
       padding: 4px;
       border-radius: 50%;
+      transform: rotate(var(--prog));
     }
   }
 

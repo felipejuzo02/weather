@@ -5,13 +5,15 @@ axios.defaults.baseURL = 'https://cors-anywhere.herokuapp.com/https://www.metawe
 const state = {
   city: {},
   consolidatedWeather: [],
-  todayInformation: {}
+  todayInformation: {},
+  cities: []
 }
 
 const getters = {
   cityInformation: state => state.city,
   weekInformations: state => state.consolidatedWeather,
-  todayInformation: state => state.todayInformation
+  todayInformation: state => state.todayInformation,
+  fetchCities: state => state.cities
 }
 
 const mutations = {
@@ -19,6 +21,10 @@ const mutations = {
     state.city = data
     state.consolidatedWeather = data.consolidated_weather
     state.todayInformation = data.consolidated_weather[0]
+  },
+
+  setCities (state, data) {
+    state.cities = data
   }
 }
 
@@ -30,6 +36,15 @@ const actions = {
     })
 
     commit('setCity', data)
+  },
+
+  async fetchCities ({ commit }, params) {
+    const { data } = await axios({
+      method: 'GET',
+      url: `location/search/?query=${params}`
+    })
+
+    commit('setCities', data)
   }
 }
 
