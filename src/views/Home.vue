@@ -111,7 +111,7 @@ export default {
     drawerInfos () {
       return {
         temperature: formatTemperature(this.todayInformation.the_temp),
-        day: 'Fri, 5 Jun',
+        day: formatDate(this.todayInformation.applicable_date, 'en-us'),
         city: this.cityInformation.title,
         link: `https://www.metaweather.com/static/img/weather/${this.todayInformation.weather_state_abbr}.svg`
       }

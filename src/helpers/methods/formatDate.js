@@ -5,7 +5,7 @@ export default function (model, type) {
   date.setDate(date.getDate() + 1)
 
   if (date.getDate() === new Date().getDate()) {
-    return 'Today'
+    return `Today . ${date.toLocaleDateString(type, options)}`
   }
 
   if (date.getDate() > new Date().getDate() && date.getDate() < (new Date().getDate() + 2)) {

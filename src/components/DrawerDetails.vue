@@ -10,9 +10,6 @@
             </template>
           </round-button>
         </div>
-        <div class="drawer-details__image-container">
-          <!-- <img src="../assets/Cloud-background.png" alt="cloud-bg" class="drawer-details__image-background"> -->
-        </div>
       </div>
 
       <div class="drawer-details__content">
@@ -22,9 +19,7 @@
           <p class="drawer-details__weather">{{ content.weather }}</p>
 
           <div class="drawer-details__infos">
-            <div class="drawer-details__today flex-row mt-lg">
-              <p class="mr-sm">Today</p>
-              <p>.</p>
+            <div class="drawer-details__today mt-lg">
               <p class="ml-sm">{{ content.day }}</p>
             </div>
 
