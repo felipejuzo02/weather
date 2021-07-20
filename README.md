@@ -153,3 +153,15 @@ A fim de manter feedback e relatar minha experiência no projeto, algumas observ
 - Realizar a conversão de celsius para farenheit
 - Pegar localização atual para primeira consulta de previsão
 - Apagar a ultima pesquisa realizada
+
+# Publicação
+Para realizar a publicação, foi utilizado o `Vercel`. Para isso foi feitos os seguintes passos:
+- Executar
+```
+$ npm i -g vercel
+$ vercel
+```
+
+- Depois foi conectado na conta do github
+- Selecionado o repositório
+- GG
