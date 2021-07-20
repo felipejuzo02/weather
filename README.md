@@ -146,3 +146,10 @@ location/search/?query=NOME_DA_PESQUISA
 A fim de manter feedback e relatar minha experiência no projeto, algumas observações:
 - Realizar o mobile-first
 - Ao criar os componentes, usar API no começo para não quebrar posteriormente
+
+# Detalhes para futuras manutenções
+- Incluir loading ao realizar a busca
+- Colocar a nuvem de background com animação
+- Realizar a conversão de celsius para farenheit
+- Pegar localização atual para primeira consulta de previsão
+- Apagar a ultima pesquisa realizada
