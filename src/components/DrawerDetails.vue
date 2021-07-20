@@ -10,7 +10,9 @@
             </template>
           </round-button>
         </div>
-        <img src="../assets/Cloud-background.png" alt="cloud-bg" class="drawer-details__image-background">
+        <div class="drawer-details__image-container">
+          <!-- <img src="../assets/Cloud-background.png" alt="cloud-bg" class="drawer-details__image-background"> -->
+        </div>
       </div>
 
       <div class="drawer-details__content">
@@ -32,7 +34,6 @@
             </div>
           </div>
         </div>
-
       </div>
 
     </template>
@@ -84,11 +85,11 @@ export default {
       cursor: pointer;
     }
 
-    &__image-background {
-      position: fixed;
-      margin-left: -54px;
-      width: 524px;
-      opacity: 0.1;
+    &__image-container {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      max-width: 524px;
     }
 
     &__icon-locale {
@@ -97,6 +98,20 @@ export default {
 
     &__content {
       text-align: center;
+      overflow: hidden;
+    }
+
+    &__content::before {
+      background-image: url('../assets/Cloud-background.png');
+      background-repeat: no-repeat;
+      background-size: contain;
+      position: absolute;
+      top: 120px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      content: '';
+      opacity: .1;
     }
 
     &__informations {
@@ -144,6 +159,23 @@ export default {
 
     &__svg {
       fill: $grey1;
+    }
+  }
+
+  @media (max-width: 1280px){
+    .drawer-details {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+
+      &__image-background {
+        position: relative;
+
+        margin-left: -54px;
+        width: 524px;
+        opacity: 0.1;
+        overflow: hidden;
+      }
     }
   }
 

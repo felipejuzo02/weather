@@ -89,4 +89,12 @@ export default {
     }
   }
 
+  @media (max-width: 1280px){
+    .drawer-search {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+    }
+  }
+
 </style>

@@ -51,4 +51,10 @@ export default {
     }
   }
 
+  @media (max-width: 1280px){
+    .cardTodayInformation {
+    width: 100%;
+    }
+  }
+
 </style>
