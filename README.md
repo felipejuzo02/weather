@@ -13,7 +13,6 @@ Para a construção do App foi utilizado as seguintes tecnologias:
 - VueX
 - Axios
 - SCSS
-- API Rest
 - Insomnia
 
 # Os componentes
