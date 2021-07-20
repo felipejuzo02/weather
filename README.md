@@ -152,6 +152,7 @@ A fim de manter feedback e relatar minha experiência no projeto, algumas observ
 - Realizar a conversão de celsius para farenheit
 - Pegar localização atual para primeira consulta de previsão
 - Apagar a ultima pesquisa realizada
+- Utilizar mixins scss
 
 # Publicação
 Para realizar a publicação, foi utilizado o `Vercel`. Para isso foi feitos os seguintes passos:
