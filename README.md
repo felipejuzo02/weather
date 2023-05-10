@@ -1,4 +1,4 @@
-# Weather App
+# Weather App - Projeto fora do ar (Necessidade de outra API)
 # O projeto
 O projeto é baseado no desafio do site DevChallanges.io, sendo que a api foi fornecido pelos mesmos
 
